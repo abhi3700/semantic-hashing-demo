@@ -71,6 +71,30 @@ def bucket_hashes(v: List[str]) -> Dict[str, List[np.uint8]]:
     return bucket
 
 
+def hamming_distance(str1: str, str2: str) -> int:
+    """Calculate the Hamming distance between two strings.
+
+    Args:
+        str1 (str): The first string.
+        str2 (str): The second string.
+
+    Returns:
+        int: The Hamming distance between the two strings.
+
+    Raises:
+        ValueError: If the lengths of the strings are not equal.
+    """
+    if len(str1) != len(str2):
+        raise ValueError("Strings must be of equal length")
+
+    distance = 0
+    for char1, char2 in zip(str1, str2):
+        if char1 != char2:
+            distance += 1
+
+    return distance
+
+
 def main():
     """
     Categorize the search queries into buckets based on their hash values using LSH random projection approach.
@@ -104,6 +128,13 @@ def main():
     print("\nbucket")
     bucket = bucket_hashes(hashed_vectors)
     print(bucket)
+
+    # calculate the hamming distance between the query and each bucket
+    print("\nhamming distance b/w query and each bucket")
+    hamming_distances = []
+    for hash_str in bucket.keys():
+        hamming_distances.append(hamming_distance(hash_query, hash_str))
+    print(hamming_distances)
 
 
 # end def
