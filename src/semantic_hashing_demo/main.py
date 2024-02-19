@@ -75,24 +75,27 @@ def main():
     """
     Categorize the search queries into buckets based on their hash values using LSH random projection approach.
     """
+    nbits = 4  # no. of hyperplanes
 
-    # Search queries
-    queries = [
+    # search query
+    query = "How to get started with machine learning"
+    hash_query = hash_vector(get_embedding(query), nbits)
+    print(f'\nsearch query: \"{query}\"')
+    print(f'and it\'s hash: {hash_query}')
+
+    # knowledge base
+    infos = [
         "How to get started with machine learning",
-        "How to get started with machine learning",
-        "How to get started with machine learning",
-        "How to get started with machine learning",
-        # "How to get started with deep learning",
-        # "How to get started with computer vision",
-        # "How to get started with natural language processing",
+        "How to get started with deep learning",
+        "How to get started with computer vision",
+        "How to get started with natural language processing",
     ]
-    print("\nqueries")
-    print(queries)
+    print("\nInfomation or Knowledge base")
+    print(infos)
 
-    # embeddings vector for each query
-    embeddings = [get_embedding(query) for query in queries]
+    # embeddings vector for each info
+    embeddings = [get_embedding(info) for info in infos]
 
-    nbits = 8  # no. of hyperplanes
     hashed_vectors = [hash_vector(embedding, nbits) for embedding in embeddings]
     print("\nhashed vectors")
     print(hashed_vectors)
