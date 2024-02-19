@@ -34,7 +34,7 @@ def hash_vector(v: List[np.float64], nbits: np.uint16) -> str:
         str: A binary string of length nbits.
     """
     # create a set of 4 hyperplanes (normal ⟂), with 2 dimensions
-    plane_norms = np.random.rand(nbits, len(v)) - 0.5
+    plane_norms = np.random.rand(int(nbits), len(v)) - 0.5
 
     v_np = np.asarray(v)
 
@@ -60,7 +60,7 @@ def bucket_hashes(v: List[str]) -> Dict[str, List[np.uint8]]:
         Dict[str, List[np.uint8]]: Buckets as hashmap where key is hash string and value is list of indices.
                                     Each index corresponds to the original query
     """
-    bucket = {}
+    bucket: Dict = {}
 
     for i, hash_str in enumerate(v):
         if hash_str in bucket:
@@ -92,7 +92,7 @@ def main():
     # embeddings vector for each query
     embeddings = [get_embedding(query) for query in queries]
 
-    nbits = 2  # no. of hyperplanes
+    nbits = 8  # no. of hyperplanes
     hashed_vectors = [hash_vector(embedding, nbits) for embedding in embeddings]
     print("\nhashed vectors")
     print(hashed_vectors)
