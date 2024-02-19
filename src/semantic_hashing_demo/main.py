@@ -80,8 +80,8 @@ def main():
     # search query
     query = "How to get started with machine learning"
     hash_query = hash_vector(get_embedding(query), nbits)
-    print(f'\nsearch query: \"{query}\"')
-    print(f'and it\'s hash: {hash_query}')
+    print(f'\nsearch query: "{query}"')
+    print(f"and it's hash: {hash_query}")
 
     # knowledge base
     infos = [
