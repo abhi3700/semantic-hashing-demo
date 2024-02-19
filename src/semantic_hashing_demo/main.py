@@ -1,8 +1,10 @@
+from typing import Dict, List
+
 import numpy as np
 from openai import OpenAI
-from typing import List, Dict
 
 client = OpenAI()
+
 
 def get_embedding(text: str, model="text-embedding-3-small"):
     """Get the embedding vector of a given text with default OpenAI embedding small model.
@@ -34,8 +36,10 @@ def hash_vector(v: List[np.float64], nbits: np.uint16) -> str:
     # create a set of 4 hyperplanes (normal ⟂), with 2 dimensions
     plane_norms = np.random.rand(nbits, len(v)) - 0.5
 
+    v_np = np.asarray(v)
+
     # calculate the dot product for each of these
-    v_dot = np.dot(v, plane_norms.T)
+    v_dot = np.dot(v_np, plane_norms.T)
 
     # we know that a positive dot product == +ve side of hyperplane
     # and negative dot product == -ve side of hyperplane
@@ -44,7 +48,6 @@ def hash_vector(v: List[np.float64], nbits: np.uint16) -> str:
     v_dot = "".join(str(i) for i in v_dot)
 
     return v_dot
-
 
 
 def bucket_hashes(v: List[str]) -> Dict[str, List[np.uint8]]:
@@ -58,7 +61,7 @@ def bucket_hashes(v: List[str]) -> Dict[str, List[np.uint8]]:
                                     Each index corresponds to the original query
     """
     bucket = {}
-    
+
     for i, hash_str in enumerate(v):
         if hash_str in bucket:
             bucket[hash_str].append(i)
@@ -73,7 +76,6 @@ def main():
     Categorize the search queries into buckets based on their hash values using LSH random projection approach.
     """
 
-
     # Search queries
     queries = [
         "How to get started with machine learning",
@@ -86,20 +88,19 @@ def main():
     ]
     print("\nqueries")
     print(queries)
-    
+
     # embeddings vector for each query
     embeddings = [get_embedding(query) for query in queries]
-    
-    nbits = 4 # no. of hyperplanes
+
+    nbits = 2  # no. of hyperplanes
     hashed_vectors = [hash_vector(embedding, nbits) for embedding in embeddings]
-    print("\nhashed_vectors")
+    print("\nhashed vectors")
     print(hashed_vectors)
-    
+
     # TODO: Convert the embeddings to numpy array
     print("\nbucket")
     bucket = bucket_hashes(hashed_vectors)
     print(bucket)
-
 
 
 # end def
