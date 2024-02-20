@@ -2,8 +2,9 @@ from typing import Dict, List
 
 import numpy as np
 import polars as pl
-from input import data_file, n, nbits
+from input import data_file, n, nbits, seed
 from openai import OpenAI
+from numpy.random import RandomState
 
 client = OpenAI()
 
@@ -24,33 +25,33 @@ def get_embedding(text: str, model="text-embedding-3-small"):
     return client.embeddings.create(input=[text], model=model).data[0].embedding
 
 
-def hash_vector(v: List[np.float64], nbits: np.uint16) -> str:
-    """LSH random projection hash function.
-    It is a simple hash function that takes a vector and returns a binary string of length nbits.
-
+def hash_vector(v: List[np.float64], nbits: np.uint16, seed: str = 'subspace') -> str:
+    """LSH random projection hash function with seeded hyperplane generation.
+    
     Args:
         v (List[np.float64]): embedding vector.
         nbits (np.uint16): no. of hyperplanes.
+        seed (str, optional): Seed for the random number generator. Defaults to 'subspace'.
 
     Returns:
         str: A binary string of length nbits.
     """
-    # create a set of 4 hyperplanes (normal ⟂), with 2 dimensions
-    plane_norms = np.random.rand(int(nbits), len(v)) - 0.5
+    # Convert the seed string to an integer hash
+    seed_int = hash(seed) % (2**32)  # Ensure seed is within 32-bit integer range
+
+    # Create a RandomState instance with the seed
+    rng = RandomState(seed_int)
+
+    # Generate hyperplanes using the seeded random number generator
+    plane_norms = rng.rand(int(nbits), len(v)) - 0.5
 
     v_np = np.asarray(v)
-
-    # calculate the dot product for each of these
     v_dot = np.dot(v_np, plane_norms.T)
-
-    # we know that a positive dot product == +ve side of hyperplane
-    # and negative dot product == -ve side of hyperplane
     v_dot = v_dot > 0
     v_dot = v_dot.astype(int)
     v_dot = "".join(str(i) for i in v_dot)
 
     return v_dot
-
 
 def bucket_hashes(v: List[str]) -> Dict[str, List[np.uint8]]:
     """Distribute hashes into corresponding buckets
@@ -128,7 +129,7 @@ def main():
     # =============== B. Bucketing of a given text into available buckets===============
     # search query
     query = infos[0]  # try with the 1st one to verify the correctness
-    hash_query = hash_vector(get_embedding(query), nbits)
+    hash_query = hash_vector(get_embedding(query), nbits, seed)
     print(f"\nFor a given text: \"{query}\", it's computed hash is '{hash_query}'.")
 
     # calculate the hamming distance between the query and each bucket
