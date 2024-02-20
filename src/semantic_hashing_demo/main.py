@@ -1,8 +1,9 @@
 from typing import Dict, List
 
 import numpy as np
+import polars as pl
+from input import data_file, n, nbits
 from openai import OpenAI
-from input import nbits
 
 client = OpenAI()
 
@@ -98,17 +99,17 @@ def hamming_distance(str1: str, str2: str) -> int:
 
 def main():
     """
-    Categorize the search queries into buckets based on their hash values using LSH random projection approach.
+    Print the index of the bucket that the given text belongs to.
     """
     # =============== A. Bucketing of Texts ===============
+    print(f"Parsing {n} samples with {nbits} hyperplanes for bucketing...")
+
     # knowledge base
-    infos = [
-        "How to get started with machine learning",
-        "How to get started with deep learning",
-        "How to get started with computer vision",
-        "How to get started with natural language processing",
-    ]
-    print("\nInformation or Knowledge base")
+    df = pl.read_csv(data_file)
+    reviews = df.select("Text").to_numpy().flatten()
+    # get text samples
+    infos = reviews[:n]
+    print("\nInformation or Knowledge base (1st 5 samples):")
     print(infos[0:5])
 
     # embeddings vector for each info
@@ -120,15 +121,15 @@ def main():
     print(hashed_vectors)
 
     # Bucket the hashed vectors
-    print("\nbuckets:")
     bucket = bucket_hashes(hashed_vectors)
+    print(f"\nbuckets has a length of {len(bucket.keys())}")
     print(bucket)
 
     # =============== B. Bucketing of a given text into available buckets===============
     # search query
-    query = "How to get started with machine learning"
+    query = infos[0]  # try with the 1st one to verify the correctness
     hash_query = hash_vector(get_embedding(query), nbits)
-    print(f'\nFor a given text: "{query}", it\'s computed hash is \'{hash_query}\'.')
+    print(f"\nFor a given text: \"{query}\", it's computed hash is '{hash_query}'.")
 
     # calculate the hamming distance between the query and each bucket
     print("\nhamming distances b/w the query from each bucket key:")
@@ -136,10 +137,12 @@ def main():
     for hash_str in bucket.keys():
         hamming_distances.append(hamming_distance(hash_query, hash_str))
     print(hamming_distances)
-    
+
     # Get the index of the lowest one
     min_index = np.argmin(hamming_distances)
-    print(f'\nHence, the given text belongs to the {min_index}th index of the bucket.')
+    print(
+        f"\nHence, the given text belongs to the {min_index}th index of the bucket with key: {list(bucket.keys())[min_index]}."
+    )
 
 
 # end def
