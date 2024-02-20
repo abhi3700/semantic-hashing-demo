@@ -34,7 +34,7 @@ Tested on my machine: **Apple M1 Max chip, 32GB RAM, 10 cores**.
 
 | Text inputs | no. of hyperplanes | Execution Time |
 | :---------: | :----------------: | :------------: |
-|     100     |         4          |     65.69      |
-|     150     |         4          |     158.33     |
-|     200     |         4          |     318.48     |
-|     500     |         4          |   15m 39.88    |
+|     100     |         4          |    1m 5.69s    |
+|     150     |         4          |   3m 38.33s    |
+|     200     |         4          |   5m 18.48s    |
+|     500     |         4          |   15m 39.88s   |
