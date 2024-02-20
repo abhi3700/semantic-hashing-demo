@@ -8,7 +8,7 @@ nbits = 4
 
 
 # data file
-# NOTE: This data file has around 570k text reviews (single line vs paragraph).
+# NOTE: This data file has around 570k text reviews (of types: single line, paragraph).
 # So, parse accordingly depending on the computational resources for bucketing.
 data_file = "./data/fine_food_reviews_1k.csv"
 
