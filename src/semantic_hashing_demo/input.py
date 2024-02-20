@@ -4,7 +4,7 @@ This module contains the input data for the semantic hashing demo.
 
 
 # no. of hyperplanes
-nbits = 8
+nbits = 4
 
 
 # data file
@@ -13,7 +13,7 @@ nbits = 8
 data_file = "./data/fine_food_reviews_1k.csv"
 
 # no. of text samples
-n = 10
+n = 20
 
 # seed for hyperplane generation
-seed = 'subspace'
+seed = 2254     # subspace address format prefix

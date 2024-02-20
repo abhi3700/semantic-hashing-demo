@@ -25,7 +25,7 @@ def get_embedding(text: str, model="text-embedding-3-small"):
     return client.embeddings.create(input=[text], model=model).data[0].embedding
 
 
-def hash_vector(v: List[np.float64], nbits: np.uint16, seed: str = 'subspace') -> str:
+def hash_vector(v: List[np.float64], nbits: np.uint16) -> str:
     """LSH random projection hash function with seeded hyperplane generation.
     
     Args:
@@ -36,11 +36,9 @@ def hash_vector(v: List[np.float64], nbits: np.uint16, seed: str = 'subspace') -
     Returns:
         str: A binary string of length nbits.
     """
-    # Convert the seed string to an integer hash
-    seed_int = hash(seed) % (2**32)  # Ensure seed is within 32-bit integer range
-
     # Create a RandomState instance with the seed
-    rng = RandomState(seed_int)
+    # rng = RandomState(seed_int)
+    rng = RandomState(seed)
 
     # Generate hyperplanes using the seeded random number generator
     plane_norms = rng.rand(int(nbits), len(v)) - 0.5
@@ -63,15 +61,17 @@ def bucket_hashes(v: List[str]) -> Dict[str, List[np.uint8]]:
         Dict[str, List[np.uint8]]: Buckets as hashmap where key is hash string and value is list of indices.
                                     Each index corresponds to the original query
     """
-    bucket: Dict = {}
+    buckets: Dict = {}
 
     for i, hash_str in enumerate(v):
-        if hash_str in bucket:
-            bucket[hash_str].append(i)
-        else:
-            bucket[hash_str] = [i]
+        # create bucket if it doesn't exist
+        if hash_str not in buckets.keys():
+            buckets[hash_str] = []
+    
+        # add vector position to bucket
+        buckets[hash_str].append(i)
 
-    return bucket
+    return buckets
 
 
 def hamming_distance(str1: str, str2: str) -> int:
@@ -128,8 +128,11 @@ def main():
 
     # =============== B. Bucketing of a given text into available buckets===============
     # search query
-    query = infos[0]  # try with the 1st one to verify the correctness
-    hash_query = hash_vector(get_embedding(query), nbits, seed)
+    # query = infos[0]  # try with the 1st one to verify the correctness
+    # query = infos[1]  # try with the 1st one to verify the correctness
+    # query = "I have bought many of the Vitality canned dog food products and have found them all to be of good quality. The product looks more like a stew than a processed meat and it smells good. My Labrador is finicky and she likes this product better than  most."  # changed the 1st review a bit
+    query = 'Product reached marked as Jumbo Salted Peanuts...the peanuts were actually small sized unsalted. Not sure if this was a mistake or if the vendor wanted to indicate the product as "Jumbo".' # changed the 2nd review a bit
+    hash_query = hash_vector(get_embedding(query), nbits)
     print(f"\nFor a given text: \"{query}\", it's computed hash is '{hash_query}'.")
 
     # calculate the hamming distance between the query and each bucket
@@ -142,7 +145,7 @@ def main():
     # Get the index of the lowest one
     min_index = np.argmin(hamming_distances)
     print(
-        f"\nHence, the given text belongs to the {min_index}th index of the bucket with key: {list(bucket.keys())[min_index]}."
+        f"\nHence, the given text belongs to the {min_index}th index of the bucket with key: \'{list(bucket.keys())[min_index]}\', value: [{list(bucket.values())[min_index][0]}]."
     )
 
 
