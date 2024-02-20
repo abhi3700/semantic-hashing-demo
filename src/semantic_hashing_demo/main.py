@@ -2,9 +2,10 @@ from typing import Dict, List
 
 import numpy as np
 import polars as pl
-from input import data_file, n, nbits, seed
-from openai import OpenAI
 from numpy.random import RandomState
+from openai import OpenAI
+
+from semantic_hashing_demo.config import data_file, n, nbits, seed
 
 client = OpenAI()
 
@@ -27,7 +28,7 @@ def get_embedding(text: str, model="text-embedding-3-small"):
 
 def hash_vector(v: List[np.float64], nbits: np.uint16) -> str:
     """LSH random projection hash function with seeded hyperplane generation.
-    
+
     Args:
         v (List[np.float64]): embedding vector.
         nbits (np.uint16): no. of hyperplanes.
@@ -51,6 +52,7 @@ def hash_vector(v: List[np.float64], nbits: np.uint16) -> str:
 
     return v_dot
 
+
 def bucket_hashes(v: List[str]) -> Dict[str, List[np.uint8]]:
     """Distribute hashes into corresponding buckets
 
@@ -67,7 +69,7 @@ def bucket_hashes(v: List[str]) -> Dict[str, List[np.uint8]]:
         # create bucket if it doesn't exist
         if hash_str not in buckets.keys():
             buckets[hash_str] = []
-    
+
         # add vector position to bucket
         buckets[hash_str].append(i)
 
@@ -131,7 +133,7 @@ def main():
     # query = infos[0]  # try with the 1st one to verify the correctness
     # query = infos[1]  # try with the 1st one to verify the correctness
     # query = "I have bought many of the Vitality canned dog food products and have found them all to be of good quality. The product looks more like a stew than a processed meat and it smells good. My Labrador is finicky and she likes this product better than  most."  # changed the 1st review a bit
-    query = 'Product reached marked as Jumbo Salted Peanuts...the peanuts were actually small sized unsalted. Not sure if this was a mistake or if the vendor wanted to indicate the product as "Jumbo".' # changed the 2nd review a bit
+    query = 'Product reached marked as Jumbo Salted Peanuts...the peanuts were actually small sized unsalted. Not sure if this was a mistake or if the vendor wanted to indicate the product as "Jumbo".'  # changed the 2nd review a bit
     hash_query = hash_vector(get_embedding(query), nbits)
     print(f"\nFor a given text: \"{query}\", it's computed hash is '{hash_query}'.")
 
@@ -145,7 +147,7 @@ def main():
     # Get the index of the lowest one
     min_index = np.argmin(hamming_distances)
     print(
-        f"\nHence, the given text belongs to the {min_index}th index of the bucket with key: \'{list(bucket.keys())[min_index]}\', value: [{list(bucket.values())[min_index][0]}]."
+        f"\nHence, the given text belongs to the {min_index}th index of the bucket with key: '{list(bucket.keys())[min_index]}', value: [{list(bucket.values())[min_index][0]}]."
     )
 
 

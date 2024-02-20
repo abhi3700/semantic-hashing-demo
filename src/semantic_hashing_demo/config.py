@@ -16,4 +16,4 @@ data_file = "./data/fine_food_reviews_1k.csv"
 n = 20
 
 # seed for hyperplane generation
-seed = 2254     # subspace address format prefix
+seed = 2254  # subspace address format prefix
