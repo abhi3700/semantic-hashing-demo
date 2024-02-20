@@ -4,7 +4,7 @@ This module contains the input data for the semantic hashing demo.
 
 
 # no. of hyperplanes
-nbits = 4
+nbits = 8
 
 
 # data file
