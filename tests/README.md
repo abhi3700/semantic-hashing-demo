@@ -112,3 +112,11 @@ generated text hash: 0001
 original text hash: 0011
 generated text hash: 1100
 ```
+
+## Conclusion
+
+Had to also consider openai large embedding model as well. In some cases, tests passed as in the query text fell into the expected bucket.
+At this point it’s a bit ambiguous to jump to a conclusion. There are 2 main observations as of now:
+
+1. In cases where the semantic hash is different for the original & query texts, embedding model needs to be replaced.
+2. In cases where the semantic hash is same for the original & query texts, hamming distance vector is to blamed for. For instance, with [2, 1, 1, 3, 4] hamming distance vector, the traversal if done from left, the query text is supposed to go into bucket at index-1 as it is the shortest distance so far. But, the original text is inside the bucket at index-2.
