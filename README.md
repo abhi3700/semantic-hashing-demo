@@ -45,3 +45,7 @@ Tested on my machine: **Apple M1 Max chip, 32GB RAM, 10 cores**.
 |     150     |         4          |   3m 38.33s    |
 |     200     |         4          |   5m 18.48s    |
 |     500     |         4          |   15m 39.88s   |
+
+## Algorithm testing
+
+Refer this [README](./tests/README.md) for more details.

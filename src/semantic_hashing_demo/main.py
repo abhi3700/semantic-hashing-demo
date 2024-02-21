@@ -2,10 +2,9 @@ from typing import Dict, List
 
 import numpy as np
 import polars as pl
+from config import data_file, model, n, nbits, seed
 from numpy.random import RandomState
 from openai import OpenAI
-
-from semantic_hashing_demo.config import data_file, n, nbits, seed
 
 client = OpenAI()
 
@@ -116,7 +115,7 @@ def main():
     print(infos[0:5])
 
     # embeddings vector for each info
-    embeddings = [get_embedding(info) for info in infos]
+    embeddings = [get_embedding(info, model) for info in infos]
 
     # hash the embeddings vector
     hashed_vectors = [hash_vector(embedding, nbits) for embedding in embeddings]
@@ -132,9 +131,16 @@ def main():
     # search query
     # query = infos[0]  # try with the 1st one to verify the correctness
     # query = infos[1]  # try with the 1st one to verify the correctness
+
     # query = "I have bought many of the Vitality canned dog food products and have found them all to be of good quality. The product looks more like a stew than a processed meat and it smells good. My Labrador is finicky and she likes this product better than  most."  # changed the 1st review a bit
-    query = 'Product reached marked as Jumbo Salted Peanuts...the peanuts were actually small sized unsalted. Not sure if this was a mistake or if the vendor wanted to indicate the product as "Jumbo".'  # changed the 2nd review a bit
+    # query = 'Product reached marked as Jumbo Salted Peanuts...the peanuts were actually small sized unsalted. Not sure if this was a mistake or if the vendor wanted to indicate the product as "Jumbo".'  # changed the 2nd review a bit
+    # query = 'Great taffy at a better price.  There was a broad assortment of yummy taffy.  Delivery was super fast.  If your a taffy lover, this is a good chance.'  # changed the 5th review a bit
+
+    # query = "I've purchased numerous cans of the Vitality dog food line and have consistently found them to be of high quality. They resemble stew more than they do processed meat, and they have a more pleasant aroma. My picky Labrador prefers this brand over many others." # ai-generated the 1st review a bit
+    # query = 'Excellent value for delicious taffy. The selection offered a broad variety of delectable flavors. The shipping was impressively fast. For enthusiasts of taffy, this offer is a must-grab.'    # ai-generated the 5th review a bit
+    query = "This dog food is highly nutritious and beneficial for digestive health. It's also suitable for young puppies. My dog consistently consumes the recommended portion at each meal."  # ai-generated the index-9 review a bit
     hash_query = hash_vector(get_embedding(query), nbits)
+    # hash_query = hash_vector(get_embedding(query, model), nbits)
     print(f"\nFor a given text: \"{query}\", it's computed hash is '{hash_query}'.")
 
     # calculate the hamming distance between the query and each bucket
@@ -147,7 +153,7 @@ def main():
     # Get the index of the lowest one
     min_index = np.argmin(hamming_distances)
     print(
-        f"\nHence, the given text belongs to the {min_index}th index of the bucket with key: '{list(bucket.keys())[min_index]}', value: [{list(bucket.values())[min_index][0]}]."
+        f"\nHence, the given text belongs to the index-{min_index} of bucket list, \ni.e. the bucket with key: '{list(bucket.keys())[min_index]}', value: [{list(bucket.values())[min_index]}]."
     )
 
 

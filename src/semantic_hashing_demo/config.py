@@ -13,7 +13,11 @@ nbits = 4
 data_file = "./data/fine_food_reviews_1k.csv"
 
 # no. of text samples
-n = 20
+n = 40
 
 # seed for hyperplane generation
 seed = 2254  # subspace address format prefix
+
+# embedding model
+# model = "text-embedding-3-small"
+model = "text-embedding-3-large"
