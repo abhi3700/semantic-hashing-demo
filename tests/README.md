@@ -5,11 +5,10 @@
 > Here, food reviews (pulled from [kaggle](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews)) are used as the text list and one of the review is used to test the built model.
 
 ```txt
-LEGEND
+Signs
 ✅: Pass
 ❌: Fail
-
-Should return result as expected depending on the case.
+🚧: WIP
 ```
 
 `run-1-{40-4}`: means 40 samples, 4 hyperplanes.
@@ -121,10 +120,15 @@ With 20 samples, 8 hyperplanes:
 - [run-2](./20_8_4r2.txt) with 47th review: As **none of the hamming distance is zero**, the query text falls into the closest bucket that has "text-8". Max. hamming distance is 7.
 - [run-3](./20_8_4r3.txt) with 55th review: As **one of the hamming distance is zero**, the query text falls into the closest bucket that has "text-11, 16". Max. hamming distance is 6.
 
-## Conclusion
+## Conclusion 🚧
 
-Had to also consider openai large embedding model as well. In some cases, tests passed as in the query text fell into the expected bucket.
-At this point it’s a bit ambiguous to jump to a conclusion. There are 2 main observations as of now:
+~~Had to also consider openai large embedding model as well.~~ [partly done, but a lot of it is still pending.]
 
-1. In cases where the semantic hash is different for the original & query texts, embedding model needs to be replaced.
-2. In cases where the semantic hash is same for the original & query texts, hamming distance vector is to blamed for. For instance, with [2, 1, 1, 3, 4] hamming distance vector, the traversal if done from left, the query text is supposed to go into bucket at index-1 as it is the shortest distance so far. But, the original text is inside the bucket at index-2.
+Passing/Failing tests mainly depends on the expected behavior for each of the types. Like in type-1, we expect the exact text to fall into the same bucket. For type-3, we expect the similar text to not fall in the same bucket which has the original text.
+
+At this point it’s a bit ambiguous to jump to a conclusion.
+
+There are 2 main observations as of now:
+
+1. In cases where the semantic hash is different for the original & query texts, the query text is deliberately put into the closest bucket that has the minimum hamming distance. For instance, with [2, 1, 1, 3, 4] hamming distance vector, the query text is supposed to go into bucket at index-1 as it is the shortest distance so far. But, the original text is inside the bucket at index-2.
+2. In cases where the semantic hash of a given query text matches with one of the bucket keys, the query text is put to that bucket, irrespective of the hamming distance vector although we calculate this. In some cases, that bucket might not have a slightly modified/similar text.
