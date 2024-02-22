@@ -113,9 +113,13 @@ generated text hash: 1100
 
 ### Type-4: Completely unrelated text
 
-Unrelated to the given samples. For instance, if 20 samples used then give a text i.e. not related to any one of them.
+Unrelated to the given samples. For instance, if first 20 samples used, then parse a query text i.e. not related to any one of them say, select any from the rest of the reviews.
 
-TODO: Need to test this.
+With 20 samples, 8 hyperplanes:
+
+- [run-1](./20_8_4r1.txt) with 25th review: As **none of the hamming distance is zero**, the query text falls into the closest bucket that has "text-4". Max. hamming distance is 5.
+- [run-2](./20_8_4r2.txt) with 47th review: As **none of the hamming distance is zero**, the query text falls into the closest bucket that has "text-8". Max. hamming distance is 7.
+- [run-3](./20_8_4r3.txt) with 55th review: As **one of the hamming distance is zero**, the query text falls into the closest bucket that has "text-11, 16". Max. hamming distance is 6.
 
 ## Conclusion
 

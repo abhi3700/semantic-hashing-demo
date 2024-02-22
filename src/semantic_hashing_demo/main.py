@@ -147,6 +147,11 @@ def main():
     # query = "I've purchased numerous cans of the Vitality dog food line and have consistently found them to be of high quality. They resemble stew more than they do processed meat, and they have a more pleasant aroma. My picky Labrador prefers this brand over many others." # ai-generated the 1st review a bit
     # query = 'Excellent value for delicious taffy. The selection offered a broad variety of delectable flavors. The shipping was impressively fast. For enthusiasts of taffy, this offer is a must-grab.'    # ai-generated the 5th review a bit
     # query = "This dog food is highly nutritious and beneficial for digestive health. It's also suitable for young puppies. My dog consistently consumes the recommended portion at each meal."  # ai-generated the index-9 review a bit
+
+    # ===== Type-4 =====
+    # query = "I have lived out of the US for over 7 yrs now, and I so miss my Twizzlers!!  When I go back to visit or someone visits me, I always stock up.  All I can say is YUM!<br />Sell these in Mexico and you will have a faithful buyer, more often than I'm able to buy them right now."
+    # query = "Good oatmeal.  I like the apple cinnamon the best.  Though I wouldn't follow the directions on the package since it always comes out too soupy for my taste.  That could just be me since I like my oatmeal really thick to add some milk on top of."
+    query = "I roast at home with a stove-top popcorn popper (but I do it outside, of course). These beans (Coffee Bean Direct Green Mexican Altura) seem to be well-suited for this method. The first and second cracks are distinct, and I've roasted the beans from medium to slightly dark with great results every time. The aroma is strong and persistent. The taste is smooth, velvety, yet lively."
     hash_query = hash_vector(get_embedding(query), nbits)
     # hash_query = hash_vector(get_embedding(query, model), nbits)
     print(f"\nFor a given text: \"{query}\", it's computed hash is '{hash_query}'.")
