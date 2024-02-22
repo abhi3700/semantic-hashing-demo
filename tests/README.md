@@ -34,19 +34,19 @@ Below are the results with openai small embedding model only.
 
 #### text-0
 
-- [run-1-{20-4}](./20_4_2a1.txt): As **one of the hamming distance is zero**, so the query text falls into a bucket that has "text-0". Max. hamming distance is 3.
-- [run-2-{20-8}](./20_8_2a2.txt): As **one of the hamming distance is zero**, so the query text falls into a bucket, but that doesn't have "text-0", instead "text-3". Max. hamming distance is 5.
+- [run-1-{20-4}](./20_4_2a1.txt): As **one of the hamming distance is zero**, the query text falls into a bucket that has "text-0". Max. hamming distance is 3.
+- [run-2-{20-8}](./20_8_2a2.txt): As **one of the hamming distance is zero**, the query text falls into a bucket, but that doesn't have "text-0", instead "text-3". Max. hamming distance is 5.
 
 #### text-1
 
-- [run-1-{20-4}](./20_4_2b1.txt): As **one of the hamming distance is zero**, so the query text falls into a bucket that has "text-1". Max. hamming distance is 3.
-- [run-2-{20-8}](./20_8_2b2.txt): As **one of the hamming distance is zero**, so the query text falls into a bucket that has "text-1". Max. hamming distance is 5.
+- [run-1-{20-4}](./20_4_2b1.txt): As **one of the hamming distance is zero**, the query text falls into a bucket that has "text-1". Max. hamming distance is 3.
+- [run-2-{20-8}](./20_8_2b2.txt): As **one of the hamming distance is zero**, the query text falls into a bucket that has "text-1". Max. hamming distance is 5.
 
 #### text-4
 
-- [run-1-{20-4}](./20_4_2c1.txt): As **one of the hamming distance is zero**, so the query text falls into a bucket, but that doesn't have "text-4", instead "[1, 6, 7, 13]". Max. hamming distance is 3.
-- [run-2-{20-8}](./20_8_2c2.txt): As **none of the hamming distance is zero**, so the query text falls into the closest bucket that does have "text-4". Max. hamming distance is 6.
-  
+- [run-1-{20-4}](./20_4_2c1.txt): As **one of the hamming distance is zero**, the query text falls into a bucket, but that doesn't have "text-4", instead "[1, 6, 7, 13]". Max. hamming distance is 3.
+- [run-2-{20-8}](./20_8_2c2.txt): As **none of the hamming distance is zero**, the query text falls into the closest bucket that has "text-4". Max. hamming distance is 6.
+
 ### Type-3: Similar ~~(AI-generated)~~ text
 
 > Prefer to call it "Similar" than "AI generated".
@@ -64,8 +64,8 @@ Below are the results with openai small/large embedding models.
 #### text-0
 
 - <u>`{bucketing: small, query: small}`</u>:
-  - [run-1](./40_4_3a.txt): As **one of the hamming distance is zero**, the query text falls into a bucket that doesn't have the original "text-0". In this case, how to raise the red flag that we found a similar content?❓ 🤔
-  - [run-2-{20-8}](./20_8_3a4.txt): As **none of the hamming distance is zero**, the query text is deliberately put into the closest bucket that doesn't have the original "text-0". Hence, we have caught the similar content.
+  - [run-1](./40_4_3a.txt): As **one of the hamming distance is zero**, the query text falls into a bucket, but that doesn't have the original "text-0", instead "[9, 28, 30, 33]". In this case, how to raise the red flag that we found a similar content?❓ 🤔 Max. hamming distance is 3.
+  - [run-2-{20-8}](./20_8_3a4.txt): As **none of the hamming distance is zero**, the query text is deliberately put into the closest bucket that doesn't have the original "text-0", instead "[1, 13]". Hence, we have caught the similar content bcoz as no HD value is zero. Max. hamming distance is 5.
 
 <!--
   It seems like we need to switch to a better embedding model with more embedding values like `text-embedding-3-large` from available [OpenAI embedding models](https://platform.openai.com/docs/guides/embeddings/embedding-models).
@@ -77,8 +77,8 @@ Below are the results with openai small/large embedding models.
 #### text-4
 
 - <u>`{bucketing: small, query: small}`</u>:
-  - [run-1-{40-4}](./40_4_3b.txt): Here, **one of the hamming distance values is zero**. Hence, the query text intents to falls into the bucket which has 19th review.
-  - [run-2-{20-8}](./20_8_3b2.txt): Although search query falls into the bucket that has original "text-4", but as **none of the hamming distance values is zero**, so we have caught the similar content.
+  - [run-1-{40-4}](./40_4_3b.txt): As **one of the hamming distance values is zero**, the query text falls into a bucket, but that doesn't have "text-4", instead "text-18". Max. hamming distance is 4.
+  - [run-2-{20-8}](./20_8_3b2.txt):  As **none of the hamming distance is zero**, the query text is deliberately put into the closest bucket that has "text-4". Hence, we have caught the similar content bcoz as no HD value is zero. Max. hamming distance is 7.
   
 <!-- - <u>`{bucketing: large, query: large}`</u>: When large model used for both, the hashes were different. [run-2](./40_4_3b2.txt) ❌
 
@@ -92,8 +92,8 @@ generated text hash: 1010
 #### text-9
 
 - <u>`{bucketing: small, query: small}`</u>:
-  - [run-1-{40-4}](./40_4_3c.txt): Here, search query prefers to fall into the bucket that doesn't have 10th review as the hamming distance is 0 for that bucket key. Hence, not able to catch the similar content.
-  - [run-2-{20-8}](./20_8_3c4.txt). As expected, it ideally doesn't go into any bucket as none of the hamming distance values is zero. Hence, we have caught the similar content.
+  - [run-1-{40-4}](./40_4_3c.txt): As **one of the hamming distance values is zero**, the query text falls into a bucket, but that doesn't have "text-9", instead "[1, 6, 7, 13, 22, 23, 24, 26, 33, 34]". Max. hamming distance is 3.
+  - [run-2-{20-8}](./20_8_3c4.txt). As **none of the hamming distance is zero**, the query text is deliberately put into the closest bucket, but that doesn't have "text-9", instead "[1, 13]". Max. hamming distance is 5. Hence, we have caught the similar content bcoz as no HD value is zero. Max. hamming distance is 7.
 
 <!-- - <u>`{bucketing: large, query: large}`</u>: [run-2](./40_4_3c2.txt) ❌. The hashes differs by 1 bit.
 
