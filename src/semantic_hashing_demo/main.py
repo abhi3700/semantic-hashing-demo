@@ -98,6 +98,9 @@ def hamming_distance(str1: str, str2: str) -> int:
 
     return distance
 
+def contains_zero(arr) -> bool:
+    """Check if the given array contains zero."""
+    return 0 in arr
 
 def main():
     """
@@ -129,16 +132,19 @@ def main():
 
     # =============== B. Bucketing of a given text into available buckets===============
     # search query
+    # ===== Type-1 =====
     # query = infos[0]  # try with the 1st one to verify the correctness
     # query = infos[1]  # try with the 1st one to verify the correctness
 
+    # ===== Type-2 =====
     # query = "I have bought many of the Vitality canned dog food products and have found them all to be of good quality. The product looks more like a stew than a processed meat and it smells good. My Labrador is finicky and she likes this product better than  most."  # changed the 1st review a bit
     # query = 'Product reached marked as Jumbo Salted Peanuts...the peanuts were actually small sized unsalted. Not sure if this was a mistake or if the vendor wanted to indicate the product as "Jumbo".'  # changed the 2nd review a bit
-    # query = 'Great taffy at a better price.  There was a broad assortment of yummy taffy.  Delivery was super fast.  If your a taffy lover, this is a good chance.'  # changed the 5th review a bit
+    query = 'Great taffy at a better price.  There was a broad assortment of yummy taffy.  Delivery was super fast.  If your a taffy lover, this is a good chance.'  # changed the 5th review a bit
 
+    # ===== Type-3 =====
     # query = "I've purchased numerous cans of the Vitality dog food line and have consistently found them to be of high quality. They resemble stew more than they do processed meat, and they have a more pleasant aroma. My picky Labrador prefers this brand over many others." # ai-generated the 1st review a bit
     # query = 'Excellent value for delicious taffy. The selection offered a broad variety of delectable flavors. The shipping was impressively fast. For enthusiasts of taffy, this offer is a must-grab.'    # ai-generated the 5th review a bit
-    query = "This dog food is highly nutritious and beneficial for digestive health. It's also suitable for young puppies. My dog consistently consumes the recommended portion at each meal."  # ai-generated the index-9 review a bit
+    # query = "This dog food is highly nutritious and beneficial for digestive health. It's also suitable for young puppies. My dog consistently consumes the recommended portion at each meal."  # ai-generated the index-9 review a bit
     hash_query = hash_vector(get_embedding(query), nbits)
     # hash_query = hash_vector(get_embedding(query, model), nbits)
     print(f"\nFor a given text: \"{query}\", it's computed hash is '{hash_query}'.")
@@ -149,7 +155,10 @@ def main():
     for hash_str in bucket.keys():
         hamming_distances.append(hamming_distance(hash_query, hash_str))
     print(hamming_distances)
-
+    if contains_zero(hamming_distances):
+        print("🙂 The given text falls into the bucket with its key having exact same hash")
+    else:
+        print("☹️ As no exact hash found, deliberately the closest bucket with min. hamming distance is selected here from left --> right.")
     # Get the index of the lowest one
     min_index = np.argmin(hamming_distances)
     print(

@@ -6,9 +6,13 @@
 
 ```txt
 LEGEND
-✅: Pass i.e. falls into expected bucket.
-❌: Fail i.e. falls into different bucket than expected.
+✅: Pass
+❌: Fail
+
+Should return result as expected depending on the case.
 ```
+
+`run-1-{40-4}`: means 40 samples, 4 hyperplanes.
 
 ## Tests
 
@@ -16,7 +20,7 @@ Tests are done in different modes keeping the semantic meaning same.
 
 ### Type-1: Exact text
 
-Parse a exact query text taken out of the text list & check if the text falls into the pre-categorized bucket.
+<u>Objective</u>: Parse a exact query text taken out of the text list & check if the text falls into the pre-categorized bucket.
 
 Below are the results with openai small embedding model only.
 
@@ -24,7 +28,7 @@ All test passed ✅ with any exact text as trained.
 
 ### Type-2: Slightly Modified text
 
-Parse a slightly modified text taken out of the text list & check if the text falls into the pre-categorized bucket.
+<u>Objective</u>: Parse a slightly modified text taken out of the text list & check if the text falls into the pre-categorized bucket.
 
 Below are the results with openai small embedding model only.
 
@@ -38,16 +42,14 @@ Below are the results with openai small embedding model only.
 
 #### text-4
 
-[run-1](./20_4_2c1.txt). No need to repeat, as same result found. It fails ❌ as it falls into a different bucket than bucket with key: `1110`. Given its 4 bits, the hashes are different by 1 bit.
+- [run-1-{20-4}](./20_4_2c1.txt): It fails ❌ as it falls into a different bucket than bucket with key: `1110`. Given its 4 bits, the hashes are different by 1 bit.
+- [run-2](./20_8_2c2.txt): Although none of the hamming distance values is zero, the query text is enforced to fall into the bucket that has original "text-4". This means the search query has a different semantic meaning than the original text based on the fact that the hamming distance values are not zero.
 
-```txt
-original text: 1110
-modified text: 1100
-```
+### Type-3: Similar ~~(AI-generated)~~ text
 
-### Type-3: AI-generated text
+> Prefer to call it "Similar" than "AI generated".
 
-Parse an AI-generated version of a query text taken out of the text list & check if the text falls into the pre-categorized bucket.
+<u>Objective</u>: Parse an AI-generated version of a query text taken out of the text list & check if the text falls into the pre-categorized bucket. Here, we are aiming to catch the similar ~~(AI-generated)~~ content that has the same meaning.
 
 > Used the following prompt in GPT-4 for this.
 
@@ -59,47 +61,39 @@ Below are the results with openai small/large embedding models.
 
 #### text-0
 
-- <u>`{bucketing: small, query: small}`</u>: [run-1](./40_4_3a.txt). It fails ❌ as it falls into a different bucket than a bucket containing 'text-0'. Also, the hash is slightly different from the original text.
+- <u>`{bucketing: small, query: small}`</u>:
+  - [run-1](./40_4_3a.txt): As **one of the hamming distance is zero**, the query text falls into a bucket that doesn't have the original "text-0". In this case, how to raise the red flag that we found a similar content?❓ 🤔
+  - [run-2-{20-8}](./20_8_3a4.txt): As **none of the hamming distance is zero**, the query text is deliberately put into the closest bucket that doesn't have the original "text-0". Hence, we have caught the similar content.
 
-  ```txt
-  original text hash: 1001
-  generated text hash: 1000
-  ```
-
+<!--
   It seems like we need to switch to a better embedding model with more embedding values like `text-embedding-3-large` from available [OpenAI embedding models](https://platform.openai.com/docs/guides/embeddings/embedding-models).
 
 - <u>`{bucketing: large, query: large}`</u>: When large model used for both, the hashes were different. [run-3](./40_4_3a3.txt) ✅
 
-- <u>`{bucketing: large, query: small}`</u> [run-2](./40_4_3a2.txt) ❌
+- <u>`{bucketing: large, query: small}`</u> [run-2](./40_4_3a2.txt) ❌ -->
 
 #### text-4
 
-- <u>`{bucketing: small, query: small}`</u>: [run-1](./40_4_3b.txt). It fails ❌ as it falls into a different bucket than a bucket containing 'text-4'. Also, the hash is very different from the original text.
-
-```txt
-original text hash: 1110
-generated text hash: 0010
-```
-
-- <u>`{bucketing: large, query: large}`</u>: When large model used for both, the hashes were different. [run-2](./40_4_3b2.txt) ❌
+- <u>`{bucketing: small, query: small}`</u>:
+  - [run-1-{40-4}](./40_4_3b.txt): Here, **one of the hamming distance values is zero**. Hence, the query text intents to falls into the bucket which has 19th review.
+  - [run-2-{20-8}](./20_8_3b2.txt): Although search query falls into the bucket that has original "text-4", but as **none of the hamming distance values is zero**, so we have caught the similar content.
+  
+<!-- - <u>`{bucketing: large, query: large}`</u>: When large model used for both, the hashes were different. [run-2](./40_4_3b2.txt) ❌
 
 ```txt
 original text hash: 0010
 generated text hash: 1010
 ```
 
-- <u>`{bucketing: large, query: small}`</u> [run-2](./40_4_3b3.txt) ✅
+- <u>`{bucketing: large, query: small}`</u> [run-2](./40_4_3b3.txt) ✅ -->
 
 #### text-9
 
-- <u>`{bucketing: small, query: small}`</u>: [run-1](./40_4_3c.txt). It fails ❌ as it falls into a different bucket than a bucket containing 'text-9'. Also, the hash is very different from the original text.
+- <u>`{bucketing: small, query: small}`</u>:
+  - [run-1-{40-4}](./40_4_3c.txt): Here, search query prefers to fall into the bucket that doesn't have 10th review as the hamming distance is 0 for that bucket key. Hence, not able to catch the similar content.
+  - [run-2-{20-8}](./20_8_3c4.txt). As expected, it ideally doesn't go into any bucket as none of the hamming distance values is zero. Hence, we have caught the similar content.
 
-```txt
-original text hash: 1000
-generated text hash: 1100
-```
-
-- <u>`{bucketing: large, query: large}`</u>: [run-2](./40_4_3c2.txt) ❌. The hashes differs by 1 bit.
+<!-- - <u>`{bucketing: large, query: large}`</u>: [run-2](./40_4_3c2.txt) ❌. The hashes differs by 1 bit.
 
 ```txt
 original text hash: 0011
@@ -111,7 +105,13 @@ generated text hash: 0001
 ```txt
 original text hash: 0011
 generated text hash: 1100
-```
+``` -->
+
+### Type-4: Completely unrelated text
+
+Unrelated to the given samples. For instance, if 20 samples used then give a text i.e. not related to any one of them.
+
+TODO: Need to test this.
 
 ## Conclusion
 
