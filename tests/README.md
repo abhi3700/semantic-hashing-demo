@@ -34,17 +34,19 @@ Below are the results with openai small embedding model only.
 
 #### text-0
 
-[run-1](./20_4_2a1.txt), [run-2](./20_4_2a2.txt) ✅
+- [run-1-{20-4}](./20_4_2a1.txt): As **one of the hamming distance is zero**, so the query text falls into a bucket that has "text-0". Max. hamming distance is 3.
+- [run-2-{20-8}](./20_8_2a2.txt): As **one of the hamming distance is zero**, so the query text falls into a bucket, but that doesn't have "text-0", instead "text-3". Max. hamming distance is 5.
 
 #### text-1
 
-[run-1](./20_4_2b1.txt), [run-2](./20_4_2b2.txt) ✅
+- [run-1-{20-4}](./20_4_2b1.txt): As **one of the hamming distance is zero**, so the query text falls into a bucket that has "text-1". Max. hamming distance is 3.
+- [run-2-{20-8}](./20_8_2b2.txt): As **one of the hamming distance is zero**, so the query text falls into a bucket that has "text-1". Max. hamming distance is 5.
 
 #### text-4
 
-- [run-1-{20-4}](./20_4_2c1.txt): It fails ❌ as it falls into a different bucket than bucket with key: `1110`. Given its 4 bits, the hashes are different by 1 bit.
-- [run-2](./20_8_2c2.txt): Although none of the hamming distance values is zero, the query text is enforced to fall into the bucket that has original "text-4". This means the search query has a different semantic meaning than the original text based on the fact that the hamming distance values are not zero.
-
+- [run-1-{20-4}](./20_4_2c1.txt): As **one of the hamming distance is zero**, so the query text falls into a bucket, but that doesn't have "text-4", instead "[1, 6, 7, 13]". Max. hamming distance is 3.
+- [run-2-{20-8}](./20_8_2c2.txt): As **none of the hamming distance is zero**, so the query text falls into the closest bucket that does have "text-4". Max. hamming distance is 6.
+  
 ### Type-3: Similar ~~(AI-generated)~~ text
 
 > Prefer to call it "Similar" than "AI generated".

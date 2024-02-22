@@ -98,9 +98,11 @@ def hamming_distance(str1: str, str2: str) -> int:
 
     return distance
 
+
 def contains_zero(arr) -> bool:
     """Check if the given array contains zero."""
     return 0 in arr
+
 
 def main():
     """
@@ -138,8 +140,8 @@ def main():
 
     # ===== Type-2 =====
     # query = "I have bought many of the Vitality canned dog food products and have found them all to be of good quality. The product looks more like a stew than a processed meat and it smells good. My Labrador is finicky and she likes this product better than  most."  # changed the 1st review a bit
-    # query = 'Product reached marked as Jumbo Salted Peanuts...the peanuts were actually small sized unsalted. Not sure if this was a mistake or if the vendor wanted to indicate the product as "Jumbo".'  # changed the 2nd review a bit
-    query = 'Great taffy at a better price.  There was a broad assortment of yummy taffy.  Delivery was super fast.  If your a taffy lover, this is a good chance.'  # changed the 5th review a bit
+    query = 'Product reached marked as Jumbo Salted Peanuts...the peanuts were actually small sized unsalted. Not sure if this was a mistake or if the vendor wanted to indicate the product as "Jumbo".'  # changed the 2nd review a bit
+    # query = 'Great taffy at a better price.  There was a broad assortment of yummy taffy.  Delivery was super fast.  If your a taffy lover, this is a good chance.'  # changed the 5th review a bit
 
     # ===== Type-3 =====
     # query = "I've purchased numerous cans of the Vitality dog food line and have consistently found them to be of high quality. They resemble stew more than they do processed meat, and they have a more pleasant aroma. My picky Labrador prefers this brand over many others." # ai-generated the 1st review a bit
@@ -156,9 +158,13 @@ def main():
         hamming_distances.append(hamming_distance(hash_query, hash_str))
     print(hamming_distances)
     if contains_zero(hamming_distances):
-        print("🙂 The given text falls into the bucket with its key having exact same hash")
+        print(
+            "🙂 The given text falls into the bucket with its key having exact same hash"
+        )
     else:
-        print("☹️ As no exact hash found, deliberately the closest bucket with min. hamming distance is selected here from left --> right.")
+        print(
+            "☹️ As no exact hash found, deliberately the closest bucket with min. hamming distance is selected here from left --> right."
+        )
     # Get the index of the lowest one
     min_index = np.argmin(hamming_distances)
     print(
