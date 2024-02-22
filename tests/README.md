@@ -109,6 +109,8 @@ original text hash: 0011
 generated text hash: 1100
 ``` -->
 
+[🚧 WIP] <u>Conclusion</u>: For similar (aka AI-generated) query text, we are able to catch the similar content, testing with higher dimensionality (aka hyperplanes). This can be confirmed looking at the hamming distance vector not having any 0 value inside.
+
 ### Type-4: Completely unrelated text
 
 Unrelated to the given samples. For instance, if 20 samples used then give a text i.e. not related to any one of them.
