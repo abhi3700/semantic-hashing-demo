@@ -25,7 +25,7 @@ def get_embedding(text: str, model="text-embedding-3-small"):
     return client.embeddings.create(input=[text], model=model).data[0].embedding
 
 
-def hash_vector(v: List[np.float64], nbits: np.uint16, plane_norms) -> str:
+def hash_vector(v: List[np.float64], plane_norms) -> str:
     """LSH random projection hash function with seeded hyperplane generation.
 
     Args:
@@ -123,7 +123,7 @@ def main():
 
     # hash the embeddings vector
     hashed_vectors = [
-        hash_vector(embedding, nbits, plane_norms) for embedding in embeddings
+        hash_vector(embedding, plane_norms) for embedding in embeddings
     ]
     print("\nhashed vectors:")
     print(hashed_vectors)
@@ -153,8 +153,8 @@ def main():
     # query = "I have lived out of the US for over 7 yrs now, and I so miss my Twizzlers!!  When I go back to visit or someone visits me, I always stock up.  All I can say is YUM!<br />Sell these in Mexico and you will have a faithful buyer, more often than I'm able to buy them right now."
     # query = "Good oatmeal.  I like the apple cinnamon the best.  Though I wouldn't follow the directions on the package since it always comes out too soupy for my taste.  That could just be me since I like my oatmeal really thick to add some milk on top of."
     # query = "I roast at home with a stove-top popcorn popper (but I do it outside, of course). These beans (Coffee Bean Direct Green Mexican Altura) seem to be well-suited for this method. The first and second cracks are distinct, and I've roasted the beans from medium to slightly dark with great results every time. The aroma is strong and persistent. The taste is smooth, velvety, yet lively."
-    hash_query = hash_vector(get_embedding(query), nbits, plane_norms)
-    # hash_query = hash_vector(get_embedding(query, model), nbits, plane_norms)
+    hash_query = hash_vector(get_embedding(query), plane_norms)
+    # hash_query = hash_vector(get_embedding(query, model), plane_norms)
     print(f"\nFor a given text: \"{query}\", it's computed hash is '{hash_query}'.")
 
     # calculate the hamming distance between the query and each bucket
