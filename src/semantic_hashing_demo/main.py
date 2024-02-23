@@ -122,7 +122,9 @@ def main():
     plane_norms = rng.rand(int(nbits), len(embeddings[0])) - 0.5
 
     # hash the embeddings vector
-    hashed_vectors = [hash_vector(embedding, nbits, plane_norms) for embedding in embeddings]
+    hashed_vectors = [
+        hash_vector(embedding, nbits, plane_norms) for embedding in embeddings
+    ]
     print("\nhashed vectors:")
     print(hashed_vectors)
 

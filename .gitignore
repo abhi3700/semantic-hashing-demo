@@ -77,5 +77,4 @@ cython_debug/
 .ruff_cache/
 
 .vscode/
-data/fine_food_reviews_1k.csv
 .DS_Store
