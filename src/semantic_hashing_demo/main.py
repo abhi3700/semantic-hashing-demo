@@ -128,10 +128,11 @@ def main():
     print("\nhashed vectors:")
     print(hashed_vectors)
 
-    # Bucket the hashed vectors
-    bucket = bucket_hashes(hashed_vectors)
-    print(f"\nbuckets has a length of {len(bucket.keys())}")
-    print(bucket)
+    # Group the hashed vectors with same key into a bucket
+    # Therefore, multiple buckets are returned as Hashmap
+    buckets = bucket_hashes(hashed_vectors)
+    print(f"\nbuckets has a length of {len(buckets.keys())}")
+    print(buckets)
 
     # =============== B. Bucketing of a given text into available buckets===============
     # search query
@@ -160,7 +161,7 @@ def main():
     # calculate the hamming distance between the query and each bucket
     print("\nhamming distances b/w the query from each bucket key:")
     hamming_distances = []
-    for hash_str in bucket.keys():
+    for hash_str in buckets.keys():
         hamming_distances.append(hamming_distance(hash_query, hash_str))
     print(hamming_distances)
     if contains_zero(hamming_distances):
@@ -174,7 +175,7 @@ def main():
     # Get the index of the lowest one
     min_index = np.argmin(hamming_distances)
     print(
-        f"\nHence, the given text belongs to the index-{min_index} of bucket list, \ni.e. the bucket with key: '{list(bucket.keys())[min_index]}', value: [{list(bucket.values())[min_index]}]."
+        f"\nHence, the given text belongs to the index-{min_index} of bucket list, \ni.e. the bucket with key: '{list(buckets.keys())[min_index]}', value: [{list(buckets.values())[min_index]}]."
     )
 
 
