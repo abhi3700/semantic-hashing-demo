@@ -4,6 +4,8 @@
 
 A simple demo of semantic hashing of search queries. Also put the queries into buckets depending on the number of hyperplanes.
 
+Details on [Notion](https://www.notion.so/subspacelabs/Semantic-Hashing-Demo-38297cb7da594dcfb96393a3c491a936).
+
 ## Install
 
 Ensure these:

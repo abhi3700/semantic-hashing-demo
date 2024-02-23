@@ -25,7 +25,7 @@ def get_embedding(text: str, model="text-embedding-3-small"):
     return client.embeddings.create(input=[text], model=model).data[0].embedding
 
 
-def hash_vector(v: List[np.float64], nbits: np.uint16) -> str:
+def hash_vector(v: List[np.float64], nbits: np.uint16, plane_norms) -> str:
     """LSH random projection hash function with seeded hyperplane generation.
 
     Args:
@@ -36,12 +36,6 @@ def hash_vector(v: List[np.float64], nbits: np.uint16) -> str:
     Returns:
         str: A binary string of length nbits.
     """
-    # Create a RandomState instance with the seed
-    # rng = RandomState(seed_int)
-    rng = RandomState(seed)
-
-    # Generate hyperplanes using the seeded random number generator
-    plane_norms = rng.rand(int(nbits), len(v)) - 0.5
 
     v_np = np.asarray(v)
     v_dot = np.dot(v_np, plane_norms.T)
@@ -122,8 +116,13 @@ def main():
     # embeddings vector for each info
     embeddings = [get_embedding(info, model) for info in infos]
 
+    # Generate hyperplanes using the seeded random number generator
+    # Create a RandomState instance with the seed
+    rng = RandomState(seed)
+    plane_norms = rng.rand(int(nbits), len(embeddings[0])) - 0.5
+
     # hash the embeddings vector
-    hashed_vectors = [hash_vector(embedding, nbits) for embedding in embeddings]
+    hashed_vectors = [hash_vector(embedding, nbits, plane_norms) for embedding in embeddings]
     print("\nhashed vectors:")
     print(hashed_vectors)
 
@@ -135,12 +134,12 @@ def main():
     # =============== B. Bucketing of a given text into available buckets===============
     # search query
     # ===== Type-1 =====
-    # query = infos[0]  # try with the 1st one to verify the correctness
+    query = infos[0]  # try with the 1st one to verify the correctness
     # query = infos[1]  # try with the 1st one to verify the correctness
 
     # ===== Type-2 =====
     # query = "I have bought many of the Vitality canned dog food products and have found them all to be of good quality. The product looks more like a stew than a processed meat and it smells good. My Labrador is finicky and she likes this product better than  most."  # changed the 1st review a bit
-    query = 'Product reached marked as Jumbo Salted Peanuts...the peanuts were actually small sized unsalted. Not sure if this was a mistake or if the vendor wanted to indicate the product as "Jumbo".'  # changed the 2nd review a bit
+    # query = 'Product reached marked as Jumbo Salted Peanuts...the peanuts were actually small sized unsalted. Not sure if this was a mistake or if the vendor wanted to indicate the product as "Jumbo".'  # changed the 2nd review a bit
     # query = 'Great taffy at a better price.  There was a broad assortment of yummy taffy.  Delivery was super fast.  If your a taffy lover, this is a good chance.'  # changed the 5th review a bit
 
     # ===== Type-3 =====
@@ -151,9 +150,9 @@ def main():
     # ===== Type-4 =====
     # query = "I have lived out of the US for over 7 yrs now, and I so miss my Twizzlers!!  When I go back to visit or someone visits me, I always stock up.  All I can say is YUM!<br />Sell these in Mexico and you will have a faithful buyer, more often than I'm able to buy them right now."
     # query = "Good oatmeal.  I like the apple cinnamon the best.  Though I wouldn't follow the directions on the package since it always comes out too soupy for my taste.  That could just be me since I like my oatmeal really thick to add some milk on top of."
-    query = "I roast at home with a stove-top popcorn popper (but I do it outside, of course). These beans (Coffee Bean Direct Green Mexican Altura) seem to be well-suited for this method. The first and second cracks are distinct, and I've roasted the beans from medium to slightly dark with great results every time. The aroma is strong and persistent. The taste is smooth, velvety, yet lively."
-    hash_query = hash_vector(get_embedding(query), nbits)
-    # hash_query = hash_vector(get_embedding(query, model), nbits)
+    # query = "I roast at home with a stove-top popcorn popper (but I do it outside, of course). These beans (Coffee Bean Direct Green Mexican Altura) seem to be well-suited for this method. The first and second cracks are distinct, and I've roasted the beans from medium to slightly dark with great results every time. The aroma is strong and persistent. The taste is smooth, velvety, yet lively."
+    hash_query = hash_vector(get_embedding(query), nbits, plane_norms)
+    # hash_query = hash_vector(get_embedding(query, model), nbits, plane_norms)
     print(f"\nFor a given text: \"{query}\", it's computed hash is '{hash_query}'.")
 
     # calculate the hamming distance between the query and each bucket
