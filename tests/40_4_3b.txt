@@ -1,0 +1,22 @@
+Parsing 40 samples with 4 hyperplanes for bucketing...
+
+Information or Knowledge base (1st 5 samples):
+['I have bought several of the Vitality canned dog food products and have found them all to be of good quality. The product looks more like a stew than a processed meat and it smells better. My Labrador is finicky and she appreciates this product better than  most.'
+ 'Product arrived labeled as Jumbo Salted Peanuts...the peanuts were actually small sized unsalted. Not sure if this was an error or if the vendor intended to represent the product as "Jumbo".'
+ 'This is a confection that has been around a few centuries.  It is a light, pillowy citrus gelatin with nuts - in this case Filberts. And it is cut into tiny squares and then liberally coated with powdered sugar.  And it is a tiny mouthful of heaven.  Not too chewy, and very flavorful.  I highly recommend this yummy treat.  If you are familiar with the story of C.S. Lewis\' "The Lion, The Witch, and The Wardrobe" - this is the treat that seduces Edmund into selling out his Brother and Sisters to the Witch.'
+ 'If you are looking for the secret ingredient in Robitussin I believe I have found it.  I got this in addition to the Root Beer Extract I ordered (which was good) and made some cherry soda.  The flavor is very medicinal.'
+ 'Great taffy at a great price.  There was a wide assortment of yummy taffy.  Delivery was very quick.  If your a taffy lover, this is a deal.']
+
+hashed vectors:
+['1001', '1100', '1101', '1001', '1110', '1110', '1100', '1100', '1101', '1000', '1111', '1111', '1101', '1100', '0100', '0100', '1111', '0100', '0010', '0100', '0100', '0100', '1100', '1100', '1100', '0101', '1100', '1001', '1000', '1111', '1000', '1001', '1101', '1000', '1100', '1001', '1101', '1011', '1101', '1101']
+
+buckets has a length of 10
+{'1001': [0, 3, 27, 31, 35], '1100': [1, 6, 7, 13, 22, 23, 24, 26, 34], '1101': [2, 8, 12, 32, 36, 38, 39], '1110': [4, 5], '1000': [9, 28, 30, 33], '1111': [10, 11, 16, 29], '0100': [14, 15, 17, 19, 20, 21], '0010': [18], '0101': [25], '1011': [37]}
+
+For a given text: "Excellent value for delicious taffy. The selection offered a broad variety of delectable flavors. The shipping was impressively fast. For enthusiasts of taffy, this offer is a must-grab.", it's computed hash is '0010'.
+
+hamming distances b/w the query from each bucket key:
+[3, 3, 4, 2, 2, 3, 2, 0, 3, 2]
+
+Hence, the given text belongs to the index-7 of bucket list,
+i.e. the bucket with key: '0010', value: [[18]].
