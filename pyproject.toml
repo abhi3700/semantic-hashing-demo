@@ -22,3 +22,4 @@ dev = [
 
 [tool.huak.task]
 main = "python3 src/semantic_hashing_demo/main.py"
+main2 = "python3 src/semantic_hashing_demo/main2.py"

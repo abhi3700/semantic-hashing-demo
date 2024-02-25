@@ -9,6 +9,11 @@ from openai import OpenAI
 client = OpenAI()
 
 
+def update_text(text):
+    updated_text = text.replace("\n", " ").replace("<br />", " ")
+    return updated_text
+
+
 def get_embedding(text: str, model="text-embedding-3-small"):
     """Get the embedding vector of a given text with default OpenAI embedding small model.
     Small embedding model: 1536 len of float values.
@@ -21,7 +26,7 @@ def get_embedding(text: str, model="text-embedding-3-small"):
     Returns:
         CreateEmbeddingResponse: list of float values.
     """
-    text = text.replace("\n", " ")
+    text = update_text(text)
     return client.embeddings.create(input=[text], model=model).data[0].embedding
 
 
@@ -122,9 +127,7 @@ def main():
     plane_norms = rng.rand(int(nbits), len(embeddings[0])) - 0.5
 
     # hash the embeddings vector
-    hashed_vectors = [
-        hash_vector(embedding, plane_norms) for embedding in embeddings
-    ]
+    hashed_vectors = [hash_vector(embedding, plane_norms) for embedding in embeddings]
     print("\nhashed vectors:")
     print(hashed_vectors)
 
@@ -178,8 +181,6 @@ def main():
         f"\nHence, the given text belongs to the index-{min_index} of bucket list, \ni.e. the bucket with key: '{list(buckets.keys())[min_index]}', value: [{list(buckets.values())[min_index]}]."
     )
 
-
-# end def
 
 if __name__ == "__main__":
     main()

@@ -22,7 +22,11 @@ huak build
 ## Run
 
 ```sh
+# demo-1
 huak run main
+
+# demo-2
+huak run main2
 ```
 
 ## Format
