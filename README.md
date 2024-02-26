@@ -25,8 +25,8 @@ huak build
 # demo-1
 huak run main
 
-# demo-2
-huak run main2
+# pre-processing data
+huak run preproc
 ```
 
 ## Format
@@ -40,17 +40,6 @@ huak fmt
 ```sh
 huak lint
 ```
-
-## Benchmark
-
-Tested on my machine: **Apple M1 Max chip, 32GB RAM, 10 cores**.
-
-| Text inputs | no. of hyperplanes | Execution Time |
-| :---------: | :----------------: | :------------: |
-|     100     |         4          |    1m 5.69s    |
-|     150     |         4          |   3m 38.33s    |
-|     200     |         4          |   5m 18.48s    |
-|     500     |         4          |   15m 39.88s   |
 
 ## Algorithm testing
 
