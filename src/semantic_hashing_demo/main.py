@@ -112,7 +112,7 @@ def main():
 
     # knowledge base
     df = pl.read_csv(data_file)
-    reviews = df.select("Text").to_numpy().flatten()
+    reviews = df.select(pl.col("Text")).to_numpy().flatten()
     # get text samples
     infos = reviews[:n]
     print("\nInformation or Knowledge base (1st 5 samples):")
