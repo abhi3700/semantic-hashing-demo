@@ -12,6 +12,8 @@ nbits = 8
 # So, parse accordingly depending on the computational resources for bucketing.
 data_file = "./data/fine_food_reviews_1k.csv"
 
+preprocessed_data_file = "./output/preprocessed_data.csv"
+
 # no. of text samples
 n = 20
 

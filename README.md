@@ -27,6 +27,9 @@ huak run main
 
 # pre-processing data
 huak run preproc
+
+# detect AI-generated data
+huak run detect
 ```
 
 ## Format
