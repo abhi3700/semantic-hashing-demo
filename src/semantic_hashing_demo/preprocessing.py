@@ -10,7 +10,7 @@ from main import get_embedding, hash_vector, seed, update_text
 from numpy.random import RandomState
 
 OUTPUT_DIR_NAME = "output"
-EMBEDDINGS_FILE_NAME = "embeddings_w_lsh.csv"
+EMBEDDINGS_FILE_NAME = "preprocessed_data.csv"
 
 
 def check_file_exists(dir: pathlib.Path, file_path: pathlib.Path):
@@ -77,7 +77,7 @@ def main():
         plane_norms = rng.rand(nbits, e_len) - 0.5
 
         # Apply LSH to the embedding
-        hashed_vectors = [
+        hashed_vectors: list[str] = [
             hash_vector(embedding, plane_norms) for embedding in embeddings
         ]
 

@@ -22,5 +22,5 @@ dev = [
 
 [tool.huak.task]
 main = "python3 src/semantic_hashing_demo/main.py"
-preproc = "python3 src/semantic_hashing_demo/preprocessing.py"
+preprocess = "python3 src/semantic_hashing_demo/preprocessing.py"
 detect = "python3 src/semantic_hashing_demo/detection.py"
