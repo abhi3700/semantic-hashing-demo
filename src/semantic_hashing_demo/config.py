@@ -11,8 +11,8 @@ nbits = 8
 # NOTE: This data file has around 570k text reviews (of types: single line, paragraph).
 # So, parse accordingly depending on the computational resources for bucketing.
 data_file = "./data/fine_food_reviews_1k.csv"
-
 preprocessed_data_file = "./output/preprocessed_data.csv"
+generated_data_file = "./data/paragraphs.csv"
 
 # no. of text samples
 n = 20
@@ -23,3 +23,7 @@ seed = 2254  # subspace address format prefix
 # embedding model
 model = "text-embedding-3-small"
 # model = "text-embedding-3-large"
+
+# embedding size
+embedding_size = int(1536)  # for small
+# embedding_size = int(3072)   # for large

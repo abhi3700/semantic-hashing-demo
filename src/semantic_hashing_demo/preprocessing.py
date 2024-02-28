@@ -17,11 +17,9 @@ def main():
     # load data
     df = pl.read_csv(data_file)
     reviews = df.get_column("Text").to_numpy().flatten()
-    # reviews = reviews[0:10]
 
+    print("Writing buckets to CSV files...\n")
     for nbits in [8, 16, 32, 64, 128]:
-        print(f"\n\n=====For nbits = {nbits}======\n")
-
         # Create LSH instance
         lsh = LSH(nbits=nbits, seed=seed, embedding_size=embedding_size)
 
@@ -31,16 +29,19 @@ def main():
         # Hash the embeddings
         hashed = [lsh.hash_vector(embedding) for embedding in embeddings]
 
-        # Bucket the hashes
-        buckets_df = lsh.hashes_to_df(hashed, "Text Hash", "Text Indices")
-        print(buckets_df)
+        # Hashes to buckets
+        buckets = lsh.bucket_hashes(hashed)
 
         # Define the path for the directory and ensure the file
         bucket_file_name = f"buckets_{nbits}bit.csv"
         check_file_exists(output_dir, output_dir / bucket_file_name)
 
-        # FIXME: write to CSV
-        # buckets_df.write_csv(output_dir / bucket_file_name, separator=",")
+        # write to CSV
+        lsh.write_buckets_to_csv(
+            buckets, "Text Hash", "Text Indices", output_dir / bucket_file_name
+        )
+        
+        print(f"\tfor nbits = {nbits} ✅\n")
 
 
 if __name__ == "__main__":

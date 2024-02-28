@@ -1,3 +1,4 @@
+import csv
 from typing import Dict, List
 
 import numpy as np
@@ -36,12 +37,29 @@ class LSH:
 
     @staticmethod
     def hashes_to_df(v: List[str], col1: str, col2: str) -> pl.DataFrame:
-        buckets: Dict[str, List[int]] = {}
+        buckets = {}
         for i, hash_str in enumerate(v):
             buckets.setdefault(hash_str, []).append(i)
 
         buckets_df = pl.from_dict({col1: buckets.keys(), col2: buckets.values()})
         return buckets_df
+
+    @staticmethod
+    def write_buckets_to_csv(
+        buckets: Dict[str, List[int]], col1: str, col2: str, filename: str
+    ):
+        # Open the file in write mode
+        with open(filename, "w", newline="") as file:
+            writer = csv.writer(file)
+            # Write the header
+            writer.writerow([col1, col2])
+
+            # Write the dictionary content
+            for key, value in buckets.items():
+                # Convert the list to a string representation
+                # If you prefer to flatten the list and join with a separator, adjust here
+                list_as_string = str(value).strip("[]")
+                writer.writerow([key, list_as_string])
 
     @staticmethod
     def hamming_distance(str1: str, str2: str) -> int:
