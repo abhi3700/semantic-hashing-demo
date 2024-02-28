@@ -17,7 +17,7 @@ def main():
     # load data
     df = pl.read_csv(data_file)
     reviews = df.get_column("Text").to_numpy().flatten()
-    reviews = reviews[0:10]
+    # reviews = reviews[0:10]
 
     for nbits in [8, 16, 32, 64, 128]:
         print(f"\n\n=====For nbits = {nbits}======\n")

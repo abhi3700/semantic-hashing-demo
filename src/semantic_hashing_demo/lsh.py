@@ -40,10 +40,7 @@ class LSH:
         for i, hash_str in enumerate(v):
             buckets.setdefault(hash_str, []).append(i)
 
-        buckets_df = pl.from_dict({
-            col1: buckets.keys(),
-            col2: str(buckets.values())
-        })
+        buckets_df = pl.from_dict({col1: buckets.keys(), col2: buckets.values()})
         return buckets_df
 
     @staticmethod
