@@ -1,135 +1,46 @@
 """ 
-Demo-2 is about storing embeddings & semantic hashes in a CSV file.
+Preprocess the data and generate the hash buckets for the text reviews.
+Store the buckets for different nbits into different files.
 """
 
 import pathlib
-from typing import Dict, List
 
 import polars as pl
-from config import data_file, model
-from main import get_embedding, hash_vector, seed, update_text
-from numpy.random import RandomState
+from config import data_file, embedding_size, model, seed
+from lsh import LSH
+from utils import check_file_exists
 
-OUTPUT_DIR_NAME = "output"
-EMBEDDINGS_FILE_NAME = "preprocessed_data.csv"
-
-
-def check_file_exists(dir: pathlib.Path, file_path: pathlib.Path):
-    # Create the directory if it doesn't exist
-    if not dir.exists():
-        dir.mkdir(parents=True, exist_ok=True)
-
-    # Create the file if it doesn't exist
-    if not file_path.is_file():
-        with file_path.open("w") as _:
-            pass
-
-
-def bucket_hashes_to_df(v: List[str]) -> pl.DataFrame:
-    """Distribute hashes into corresponding buckets
-
-    Args:
-        v (List[str]): list of hash strings.
-
-    Returns:
-        pl.DataFrame: DataFrame with two columns: 'Hash' and 'Review Indices', where 'Hash' is the hash string and 'Review Indices'
-                        is a list of indices. Each index corresponds to the original text review.
-    """
-
-    buckets = {}
-
-    for i, hash_str in enumerate(v):
-        # create bucket if it doesn't exist
-        if hash_str not in buckets.keys():
-            buckets[hash_str] = f"[{i}]"
-        else:
-            # Insert comma and space for proper list formatting in string form
-            # add vector position to bucket
-            buckets[hash_str] = buckets[hash_str][:-1] + f", {i}]"
-
-    buckets_df = pl.DataFrame(
-        [
-            pl.Series("Hash", buckets.keys(), dtype=pl.String),
-            pl.Series("Review Indices", buckets.values(), dtype=pl.String),
-        ]
-    )
-
-    return buckets_df
+output_dir = pathlib.Path("output")
 
 
 def main():
-    # =============== Process-1 ===============
-    """
-    For each sample in dataset (use the 1000 reviews)
-        1. Create embedding of sample
-        2. Save embeddings to disk, linked with source sample
-    """
-    """a. create embedding of sample"""
-    # pull data into polars dataframe
+    # load data
     df = pl.read_csv(data_file)
-    reviews = df.select(pl.col("Text")).to_numpy().flatten()
+    reviews = df.get_column("Text").to_numpy().flatten()
+    reviews = reviews[0:10]
 
-    # remove <br />, \n
-    reviews_updated = []
-    # for usage in LSH later.
-    embeddings = []
-    # for storing in CSV file
-    embeddings_str = []
+    for nbits in [8, 16, 32, 64, 128]:
+        print(f"\n\n=====For nbits = {nbits}======\n")
 
-    for review in reviews:
-        reviews_updated.append(update_text(review))
-        embedding = get_embedding(review, model)
-        embeddings.append(embedding)
-        embeddings_str.append(str(embedding))
+        # Create LSH instance
+        lsh = LSH(nbits=nbits, seed=seed, embedding_size=embedding_size)
 
-    df2 = pl.DataFrame({"Text": reviews_updated, "Embedding": embeddings_str})
+        # Generate embeddings for each review
+        embeddings = [LSH.get_embedding(review, model) for review in reviews]
 
-    # Define the path for the directory and the file
-    output_dir = pathlib.Path(OUTPUT_DIR_NAME)
-    file_path = output_dir / EMBEDDINGS_FILE_NAME
-    check_file_exists(output_dir, file_path)
+        # Hash the embeddings
+        hashed = [lsh.hash_vector(embedding) for embedding in embeddings]
 
-    """ b. Save embeddings to CSV, linked with source sample """
-    # df2.write_csv(file_path, separator=",")
+        # Bucket the hashes
+        buckets_df = lsh.hashes_to_df(hashed, "Text Hash", "Text Indices")
+        print(buckets_df)
 
-    # =============== Process-2 ===============
-    """ 
-    for each nbits = [8, 16, 32, 64, 128]
-        1. Apply LSH to the embedding
-        2. Add hash to a hash table, along with index of embedding
-        3. Save hashes to disk (categorize by parameter)
-        4. Bucketize the hashes with respective text indices    
-    """
-    # For LSH, generate hyperplanes using the seeded random number generator
-    # Create a RandomState instance with the seed
-    rng = RandomState(seed)
-    e_len = len(embeddings[0])
-
-    nbits_list = [8, 16, 32, 64, 128]
-    for i, nbits in enumerate(nbits_list):
-        # get hyperplanes for nbits
-        plane_norms = rng.rand(nbits, e_len) - 0.5
-
-        # Apply LSH to the embedding
-        hashed_vectors: list[str] = [
-            hash_vector(embedding, plane_norms) for embedding in embeddings
-        ]
-
-        df2.insert_column(
-            i + 2, pl.Series("Hash {nbits}-bit".format(nbits=nbits), hashed_vectors)
-        )
-
-        # bucketing
-        bucket_df = bucket_hashes_to_df(hashed_vectors)
+        # Define the path for the directory and ensure the file
         bucket_file_name = f"buckets_{nbits}bit.csv"
-
         check_file_exists(output_dir, output_dir / bucket_file_name)
 
-        # write to CSV
-        bucket_df.write_csv(output_dir / bucket_file_name, separator=",")
-
-    """ Save embeddings + LSH to CSV, linked with source sample """
-    df2.write_csv(file_path, separator=",")
+        # FIXME: write to CSV
+        # buckets_df.write_csv(output_dir / bucket_file_name, separator=",")
 
 
 if __name__ == "__main__":
