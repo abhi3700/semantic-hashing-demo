@@ -40,7 +40,7 @@ def main():
         lsh.write_buckets_to_csv(
             buckets, "Text Hash", "Text Indices", output_dir / bucket_file_name
         )
-        
+
         print(f"\tfor nbits = {nbits} ✅\n")
 
 

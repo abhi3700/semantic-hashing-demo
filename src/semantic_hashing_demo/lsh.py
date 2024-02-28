@@ -51,13 +51,9 @@ class LSH:
         # Open the file in write mode
         with open(filename, "w", newline="") as file:
             writer = csv.writer(file)
-            # Write the header
             writer.writerow([col1, col2])
 
-            # Write the dictionary content
             for key, value in buckets.items():
-                # Convert the list to a string representation
-                # If you prefer to flatten the list and join with a separator, adjust here
                 list_as_string = str(value).strip("[]")
                 writer.writerow([key, list_as_string])
 
@@ -66,6 +62,12 @@ class LSH:
         if len(str1) != len(str2):
             raise ValueError("Strings must be of equal length")
         return sum(char1 != char2 for char1, char2 in zip(str1, str2))
+
+    @staticmethod
+    def get_text_idx(hamming_distances: List[int]) -> int:
+        if len(hamming_distances) == 0:
+            raise ValueError("No hamming distances found")
+        return np.argmin(hamming_distances)
 
 
 # def main():

@@ -11,6 +11,7 @@ dependencies = [
     "numpy ==1.26.4",
     "pyarrow ==15.0.0",
     "polars ==0.20.10",
+    "marvin ==2.1.5",
 ]
 
 [project.optional-dependencies]
@@ -21,6 +22,8 @@ dev = [
 ]
 
 [tool.huak.task]
-main = "python3 src/semantic_hashing_demo/main.py"
+# main = "python3 src/semantic_hashing_demo/main.py"
 preprocess = "python3 src/semantic_hashing_demo/preprocessing.py"
 detect = "python3 src/semantic_hashing_demo/detection.py"
+# lsh = "python3 src/semantic_hashing_demo/lsh.py"
+# generate_data = "python3 src/semantic_hashing_demo/generate_data.py"
