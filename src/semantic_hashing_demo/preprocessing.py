@@ -24,13 +24,13 @@ def main():
         lsh = LSH(nbits=nbits, seed=seed, embedding_size=embedding_size)
 
         # Generate embeddings for each review
-        embeddings = [LSH.get_embedding(review, model) for review in reviews]
+        embeddings = lsh.get_embedding(reviews, model)
 
-        # Hash the embeddings
-        hashed = [lsh.hash_vector(embedding) for embedding in embeddings]
+        # Hash each embeddings into a hash code. Hence, a list of hash codes is returned
+        hashes = lsh.hash_vector(embeddings)
 
         # Hashes to buckets
-        buckets = lsh.bucket_hashes(hashed)
+        buckets = lsh.bucket_hashes(hashes)
 
         # Define the path for the directory and ensure the file
         bucket_file_name = f"buckets_{nbits}bit.csv"

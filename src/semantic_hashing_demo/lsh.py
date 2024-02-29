@@ -3,6 +3,7 @@ from typing import Dict, List
 
 import numpy as np
 import polars as pl
+
 # from config import data_file, generated_data_file, model, nbits, seed
 from openai import OpenAI
 
@@ -20,18 +21,21 @@ class LSH:
     @staticmethod
     def get_embedding(texts: List[str], model: str) -> np.ndarray:
         client = OpenAI()
-        processed_texts = [text.replace("\n", " ").replace("<br />", " ") for text in texts]
-        return client.embeddings.create(input=processed_texts, model=model).data[0].embedding
+        processed_texts = [
+            text.replace("\n", " ").replace("<br />", " ") for text in texts
+        ]
+        embeddings = client.embeddings.create(input=processed_texts, model=model).data
+        return np.array([embedding.embedding for embedding in embeddings])
 
-    def hash_vector(self, v: np.ndarray) -> str:
-        v_dot = np.dot(v, self.plane_norms.T) > 0
-        return "".join(str(int(i)) for i in v_dot)
+    def hash_vector(self, v: np.ndarray) -> List[str]:
+        v_dots = np.dot(v, self.plane_norms.T) > 0
+        return ["".join(str(int(i)) for i in v_dot) for v_dot in v_dots]
 
     @staticmethod
     def bucket_hashes(v: List[str]) -> Dict[str, List[int]]:
         buckets = {}
-        for i, hash_str in enumerate(v):
-            buckets.setdefault(hash_str, []).append(i)
+        for idx, hash_str in enumerate(v):
+            buckets.setdefault(hash_str, []).append(idx)
         return buckets
 
     @staticmethod
