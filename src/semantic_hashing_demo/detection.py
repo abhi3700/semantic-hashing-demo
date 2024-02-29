@@ -10,7 +10,7 @@ def main():
     for nbits in [8, 16, 32, 64, 128]:
         print(f"\n=====For nbits = {nbits}======\n")
         lsh = LSH(nbits=nbits, embedding_size=embedding_size, seed=seed)
-        query_hash = lsh.hash_vector(lsh.get_embedding(query, model))
+        query_hash = lsh.hash_vector(lsh.get_embedding([query], model))
         print(
             f"\nFor a given text: \n\"{query}\", \nit's computed hash is '{query_hash}'."
         )

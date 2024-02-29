@@ -3,7 +3,7 @@ from typing import Dict, List
 
 import numpy as np
 import polars as pl
-from config import data_file, generated_data_file, model, nbits, seed
+# from config import data_file, generated_data_file, model, nbits, seed
 from openai import OpenAI
 
 
@@ -18,14 +18,13 @@ class LSH:
         return rng.rand(self.nbits, embedding_size) - 0.5
 
     @staticmethod
-    def get_embedding(text: str, model: str) -> List[float]:
+    def get_embedding(texts: List[str], model: str) -> np.ndarray:
         client = OpenAI()
-        text = text.replace("\n", " ").replace("<br />", " ")
-        return client.embeddings.create(input=[text], model=model).data[0].embedding
+        processed_texts = [text.replace("\n", " ").replace("<br />", " ") for text in texts]
+        return client.embeddings.create(input=processed_texts, model=model).data[0].embedding
 
-    def hash_vector(self, v: List[float]) -> str:
-        v_np = np.asarray(v)
-        v_dot = np.dot(v_np, self.plane_norms.T) > 0
+    def hash_vector(self, v: np.ndarray) -> str:
+        v_dot = np.dot(v, self.plane_norms.T) > 0
         return "".join(str(int(i)) for i in v_dot)
 
     @staticmethod
