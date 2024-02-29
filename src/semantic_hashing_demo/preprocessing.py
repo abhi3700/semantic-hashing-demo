@@ -10,7 +10,9 @@ from config import data_file, embedding_size, model, seed
 from lsh import LSH
 from utils import check_file_exists
 
-output_dir = pathlib.Path("output")
+OUTPUT_DIR_NAME = "output"
+EMBEDDINGS_FILE_NAME = "preprocessed_data.csv"
+output_dir = pathlib.Path(OUTPUT_DIR_NAME)
 
 
 def main():
@@ -18,16 +20,33 @@ def main():
     df = pl.read_csv(data_file)
     reviews = df.get_column("Text").to_numpy().flatten()
 
+    # Generate embeddings for each review
+    embeddings = LSH.get_embedding(reviews, model)
+
+    reviews_updated = [
+        (lambda text: text.replace("\n", " ").replace("<br />", " "))(review)
+        for review in reviews
+    ]
+
+    df2 = pl.DataFrame(
+        {
+            "Text": reviews_updated,
+            "Embedding": [str(embedding) for embedding in embeddings.tolist()],
+        }
+    )
+
     print("Writing buckets to CSV files...\n")
-    for nbits in [8, 16, 32, 64, 128]:
+    for i, nbits in enumerate([8, 16, 32, 64, 128]):
         # Create LSH instance
         lsh = LSH(nbits=nbits, seed=seed, embedding_size=embedding_size)
 
-        # Generate embeddings for each review
-        embeddings = lsh.get_embedding(reviews, model)
-
         # Hash each embeddings into a hash code. Hence, a list of hash codes is returned
         hashes = lsh.hash_vector(embeddings)
+
+        # Add LSH hashes corresponding to the embeddings to the df2 DataFrame
+        df2.insert_column(
+            i + 2, pl.Series("Hash {nbits}-bit".format(nbits=nbits), hashes)
+        )
 
         # Hashes to buckets
         buckets = lsh.bucket_hashes(hashes)
@@ -42,6 +61,13 @@ def main():
         )
 
         print(f"\tfor nbits = {nbits} ✅\n")
+
+    # Define the path for the directory and the file
+    file_path = output_dir / EMBEDDINGS_FILE_NAME
+    check_file_exists(output_dir, file_path)
+
+    """ Save embeddings + LSH to CSV, linked with source sample """
+    df2.write_csv(file_path, separator=",")
 
 
 if __name__ == "__main__":
