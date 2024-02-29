@@ -9,8 +9,12 @@ query = "I have bought many of the Vitality canned dog food products and have fo
 def main():
     for nbits in [8, 16, 32, 64, 128]:
         print(f"\n=====For nbits = {nbits}======\n")
+
+        # instantiate LSH
         lsh = LSH(nbits=nbits, embedding_size=embedding_size, seed=seed)
-        query_hash = lsh.hash_vector(lsh.get_embedding([query], model))
+
+        # get hash of a query text
+        query_hash = lsh.hash_vector(lsh.get_embedding([query], model))[0]
         print(
             f"\nFor a given text: \n\"{query}\", \nit's computed hash is '{query_hash}'."
         )
@@ -26,14 +30,12 @@ def main():
         ]
 
         if 0 in hamming_distances:
-            print(
-                "🙂 The given text falls into the bucket with its key having exact same hash"
-            )
+            print("🎉 Falls into exact bucket!")
         else:
-            print(
-                "😟 As no exact hash found, deliberately the closest bucket with min. hamming distance is selected here from left --> right."
-            )
-        print(f"Text indices: {bucket_indices[lsh.get_text_idx(hamming_distances)]}")
+            print("😟 Falls into closest bucket, when traversed from left --> right.")
+        print(
+            f"The bucket contains texts at indices: {bucket_indices[lsh.get_text_idx(hamming_distances)]}."
+        )
 
 
 if __name__ == "__main__":

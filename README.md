@@ -22,13 +22,10 @@ huak build
 ## Run
 
 ```sh
-# demo-1
-huak run main
-
-# pre-processing data
+# pre-process input data to buckets
 huak run preproc
 
-# detect AI-generated data
+# detect similar text
 huak run detect
 ```
 
