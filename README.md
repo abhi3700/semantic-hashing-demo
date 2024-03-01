@@ -6,12 +6,6 @@ A simple demo of semantic hashing of search queries. Also put the queries into b
 
 Details on [Notion](https://www.notion.so/subspacelabs/Semantic-Hashing-Demo-38297cb7da594dcfb96393a3c491a936).
 
-## Build
-
-```sh
-huak build
-```
-
 ## Install
 
 Ensure these:
@@ -26,6 +20,7 @@ pip install git+https://github.com/cnpryer/huak@master#egg=huak
 3. Add the dependencies:
 
 ```sh
+huak build
 huak activate
 pip install -r requirements.txt
 
