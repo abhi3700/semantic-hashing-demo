@@ -44,7 +44,9 @@ class LSH:
         for i, hash_str in enumerate(v):
             buckets.setdefault(hash_str, []).append(i)
 
-        buckets_df = pl.from_dict({col1: buckets.keys(), col2: buckets.values()})
+        buckets_df = pl.from_dict(
+            {col1: list(buckets.keys()), col2: list(buckets.values())}
+        )
         return buckets_df
 
     @staticmethod
@@ -70,7 +72,7 @@ class LSH:
     def get_text_idx(hamming_distances: List[int]) -> int:
         if len(hamming_distances) == 0:
             raise ValueError("No hamming distances found")
-        return np.argmin(hamming_distances)
+        return int(np.argmin(hamming_distances))
 
 
 # def main():
