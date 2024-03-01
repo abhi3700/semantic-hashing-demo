@@ -23,10 +23,16 @@ huak build
 
 ```sh
 # pre-process input data to buckets
-huak run preproc
+huak run preprocess
 
 # detect similar text
 huak run detect
+
+# generate texts (source, variant)
+huak run generate
+
+# process generated texts (source, variant)
+huak run post_generate
 ```
 
 ## Format

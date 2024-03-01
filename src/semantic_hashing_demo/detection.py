@@ -8,10 +8,10 @@ query = "I have bought many of the Vitality canned dog food products and have fo
 
 
 def main():
-    required_files = [f"buckets_{nbits}bit.csv" for nbits in [8, 16, 32, 64, 128]] + ["preprocessed_data.csv"]
-    if not check_files_exist(
-        "output", required_files
-    ):
+    required_files = [f"buckets_{nbits}bit.csv" for nbits in [8, 16, 32, 64, 128]] + [
+        "preprocessed_data.csv"
+    ]
+    if not check_files_exist("output", required_files):
         raise ValueError("Please run `preprocessing.py` first")
 
     for nbits in [8, 16, 32, 64, 128]:
@@ -30,8 +30,8 @@ def main():
         df = pl.read_csv(
             f"output/buckets_{nbits}bit.csv", dtypes={"Text Hash": pl.String}
         )
-        bucket_hashes = df.get_column("Text Hash").to_numpy().flatten()
-        bucket_indices = df.get_column("Text Indices").to_numpy().flatten()
+        bucket_hashes = df.get_column("Text Hash").to_list()
+        bucket_indices = df.get_column("Text Indices").to_list()
 
         # get hamming distances between the query and each bucket key
         hamming_distances = [

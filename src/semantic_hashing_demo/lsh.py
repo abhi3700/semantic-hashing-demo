@@ -51,10 +51,10 @@ class LSH:
 
     @staticmethod
     def write_buckets_to_csv(
-        buckets: Dict[str, List[int]], col1: str, col2: str, filename: str
+        buckets: Dict[str, List[int]], col1: str, col2: str, file_path: str
     ):
         # Open the file in write mode
-        with open(filename, "w", newline="") as file:
+        with open(file_path, "w", newline="") as file:
             writer = csv.writer(file)
             writer.writerow([col1, col2])
 

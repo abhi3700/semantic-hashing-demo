@@ -25,3 +25,4 @@ dev = [
 preprocess = "python3 src/semantic_hashing_demo/preprocessing.py"
 detect = "python3 src/semantic_hashing_demo/detection.py"
 generate = "python3 src/semantic_hashing_demo/generate_data.py"
+post_generate = "python3 src/semantic_hashing_demo/process_generated_data.py"
