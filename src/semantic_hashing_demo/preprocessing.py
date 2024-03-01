@@ -1,4 +1,4 @@
-""" 
+"""
 Preprocess the data and generate the hash buckets for the text reviews.
 Store the buckets for different nbits into different files.
 """

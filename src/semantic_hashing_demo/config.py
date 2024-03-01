@@ -1,7 +1,6 @@
-""" 
+"""
 This module contains the input data for the semantic hashing demo.
 """
-
 
 # no. of hyperplanes
 nbits = 8

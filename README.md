@@ -6,17 +6,31 @@ A simple demo of semantic hashing of search queries. Also put the queries into b
 
 Details on [Notion](https://www.notion.so/subspacelabs/Semantic-Hashing-Demo-38297cb7da594dcfb96393a3c491a936).
 
+## Build
+
+```sh
+huak build
+```
+
 ## Install
 
 Ensure these:
 
 1. `huak` is installed following the [guide](https://github.com/cnpryer/huak/blob/master/docs/user_guide.md#installation).
-2. Download the data file as per [README](./data/README.md).
-
-## Build
 
 ```sh
-huak build
+pip install git+https://github.com/cnpryer/huak@master#egg=huak
+```
+
+2. Download the data file as per [README](./data/README.md).
+3. Add the dependencies:
+
+```sh
+huak activate
+pip install -r requirements.txt
+
+# optional
+> exit or ctrl+d
 ```
 
 ## Run
