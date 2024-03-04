@@ -1,3 +1,5 @@
+import plotly as py
+import plotly.express as px
 import polars as pl
 from config import embedding_size, model, seed
 from lsh import LSH
@@ -47,24 +49,19 @@ def main():
             len(df2.columns), pl.Series(f"Variant Hash {nbits}-bit", hashes_variant)
         )
 
-        # Create matrix dataframe for each nbits
-        df3 = pl.DataFrame(
-            {"Sources": [f"Source-{i}" for i in range(len(hashes_source))]}
-        )
+        hamming_distances = []
         # calculate HD matrix
-        for i, hash_variant in enumerate(hashes_variant):
-            hamming_distances = [
-                lsh.hamming_distance(hash_source, hash_variant)
-                for hash_source in hashes_source
-            ]
-
-            # how to get nd array using numpy inserting column with a new dataframe
-            df3.insert_column(
-                i,
-                pl.Series(f"Variant-{i}", hamming_distances),
+        for hash_variant in hashes_variant:
+            hamming_distances.append(
+                [
+                    lsh.hamming_distance(hash_source, hash_variant)
+                    for hash_source in hashes_source
+                ]
             )
 
-        df3.write_csv(f"{dir_name}/matrix_{nbits}.csv", separator=",")
+        # generate a plot for nbits hyperplanes
+        fig = px.imshow(hamming_distances)
+        py.offline.plot(fig, filename=f"output/plot_matrix_{nbits}.html")
 
         print(f"\tfor nbits = {nbits} ✅\n")
 
