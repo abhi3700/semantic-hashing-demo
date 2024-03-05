@@ -11,18 +11,37 @@ Details on [Notion](https://www.notion.so/subspacelabs/Semantic-Hashing-Demo-382
 Ensure these:
 
 1. `huak` is installed following the [guide](https://github.com/cnpryer/huak/blob/master/docs/user_guide.md#installation).
-2. Download the data file as per [README](./data/README.md).
 
-## Build
+```sh
+pip install git+https://github.com/cnpryer/huak@master#egg=huak
+```
+
+2. Download the data file as per [README](./data/README.md).
+3. Add the dependencies:
 
 ```sh
 huak build
+huak activate
+pip install -r requirements.txt
+
+# optional
+> exit or ctrl+d
 ```
 
 ## Run
 
 ```sh
-huak run main
+# pre-process input data to buckets
+huak run preprocess
+
+# detect similar text
+huak run detect
+
+# generate texts (source, variant)
+huak run generate
+
+# process generated texts (source, variant)
+huak run post_generate
 ```
 
 ## Format
@@ -36,17 +55,6 @@ huak fmt
 ```sh
 huak lint
 ```
-
-## Benchmark
-
-Tested on my machine: **Apple M1 Max chip, 32GB RAM, 10 cores**.
-
-| Text inputs | no. of hyperplanes | Execution Time |
-| :---------: | :----------------: | :------------: |
-|     100     |         4          |    1m 5.69s    |
-|     150     |         4          |   3m 38.33s    |
-|     200     |         4          |   5m 18.48s    |
-|     500     |         4          |   15m 39.88s   |
 
 ## Algorithm testing
 
