@@ -13,15 +13,6 @@ class ParagraphData(BaseModel):
     # semantically_similar:str
 
 
-# data = []
-# for _ in range(5):
-#     data.extend(marvin.generate(n=3, target=ParagraphData, instructions="generate paragraphs for comparison testing. the paragraphs should be almost identical, with only a few words changed. each paragraph should be at least 100 words long."))
-#     print(data)
-# data_dicts = [d.dict() for d in data]
-# df = pl.DataFrame(data_dicts)
-# df.write_csv("./data/paragraphs.csv")
-
-
 def generate_data():
     print("generating data")
     new_data = marvin.generate(
