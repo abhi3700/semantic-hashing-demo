@@ -1,3 +1,20 @@
+""" 
+Here, parsing a similar text (to 1st food review, say) and see if it is falling into the expected bucket or not.
+
+Suppose the 1st review is slightly modified from:
+
+```text
+I have bought several of the Vitality canned dog food products and have found them all to be of good quality. The product looks more like a stew than a processed meat and it smells better. My Labrador is finicky and she appreciates this product better than  most.
+```
+
+to:
+
+```text
+I have bought many of the Vitality canned dog food products and have found them all to be of good quality. The product looks more like a stew than a processed meat and it smells good. My Labrador is finicky and she likes this product better than  most.
+```
+
+As you can see from the results, the query text does fall into the bucket with HD = 0, but the bucket does not contain the original text i.e. text at index-0.
+"""
 import polars as pl
 from config import embedding_size, model, seed
 from lsh import LSH
