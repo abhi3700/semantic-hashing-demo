@@ -4,7 +4,6 @@ from typing import Dict, List
 import numpy as np
 import polars as pl
 
-# from config import data_file, generated_data_file, model, nbits, seed
 from openai import OpenAI
 
 
